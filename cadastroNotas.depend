@@ -1,0 +1,30 @@
+# depslib dependency file v1.0
+1616541131 source:c:\pedro\ws - c\code blocks\cadastronotas\tad_aluno.c
+	<stdio.h>
+	<stdlib.h>
+	<locale.h>
+	<string.h>
+	"tad_aluno.h"
+
+1616639515 source:c:\pedro\ws - c\code blocks\cadastronotas\main.c
+	<stdio.h>
+	<stdlib.h>
+	<locale.h>
+	<string.h>
+	"lista.h"
+
+1616545525 c:\pedro\ws - c\code blocks\cadastronotas\tad_aluno.h
+
+1616608688 source:c:\pedro\ws - c\code blocks\cadastronotas\listaestatica.c
+	"listaEstatica.h"
+
+1616608784 c:\pedro\ws - c\code blocks\cadastronotas\listaestatica.h
+
+1616639412 source:c:\pedro\ws - c\code blocks\cadastronotas\lista.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"lista.h"
+
+1616639412 c:\pedro\ws - c\code blocks\cadastronotas\lista.h
+
