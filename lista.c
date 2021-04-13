@@ -3,18 +3,21 @@
 #include <string.h>
 #include "lista.h"
 
+// struct que armanzena os dados da lista
 struct aluno
 {
     char nome[31];
     float nota;
 };
 
+// struct para armazenar a estrutura aluno e a quantidade de alunos
 struct lista
 {
     int quantidade;
     Aluno aluno[MAXIMO_ALUNOS];
 };
 
+// função para criar a lista vazia
 Lista* criaLista()
 {
     Lista *lista;
@@ -24,25 +27,28 @@ Lista* criaLista()
         lista->quantidade = 0;
         for (int i = 0; i < MAXIMO_ALUNOS; i++)
         {
-            lista->aluno[i].nome[0] = '\n';
+            lista->aluno[i].nome[0] = '\0';
             lista->aluno[i].nota = -1;
         }
     }
     return lista;
 }
 
+//função para retornar o tamanho da lista
 int tamanhoLista(Lista* lista)
 {
     if (lista == NULL)
     {
         mensagemDeErro(3);
         return -1;
-    } else
+    }
+    else
     {
         return lista->quantidade;
     }
 }
 
+// função para retornar se a lista está cheia
 int listaCheia(Lista *lista)
 {
     if (lista == NULL)
@@ -51,89 +57,82 @@ int listaCheia(Lista *lista)
         return (lista->quantidade == MAXIMO_ALUNOS);
 }
 
-void adicionarRegistro(Lista *lista, char *nome, float nota)
+// método para adicionar um registro na lista
+int adicionarRegistro(Lista *lista, char *nome, float nota)
 {
-    if (listaCheia(lista) == 1)
+    if ((nota < 0 || nota > 10) ||  nome[0] == '\0')
     {
-        mensagemDeErro(0);
+        mensagemDeErro(1);
+        return 0;
     }
     else
     {
-        int i;
-        for (i = 0; i < strlen(nome); i++)
+        if (listaCheia(lista) == 1)
         {
-            lista->aluno[lista->quantidade].nome[i] = nome[i];
-        }
-        lista->aluno[lista->quantidade].nome[i] = '\0';
-        lista->aluno[lista->quantidade].nota = nota;
-        if ((lista->aluno[lista->quantidade].nota < 0 || lista->aluno[lista->quantidade].nota > 10) ||  lista->aluno[lista->quantidade].nome[0] == '\n')
-        {
-            lista->aluno[lista->quantidade].nome[0] = '\0';
-            mensagemDeErro(1);
+            mensagemDeErro(0);
+            return 0;
         }
         else
         {
-            system("cls");
-            printf("Nome: %s\t", lista->aluno[lista->quantidade].nome);
-            printf("Nota: %.1f\nAdicionado com sucesso!\n\n", lista->aluno[lista->quantidade].nota);
+            strcat(lista->aluno[lista->quantidade].nome, nome);
+            lista->aluno[lista->quantidade].nota = nota;
             lista->quantidade++;
-            system("pause");
+            return 1;
         }
-
     }
 }
 
-void removerRegistro(Lista *lista, int posicao)
+// método para remover um registro da lista
+int removerRegistro(Lista *lista, int posicao)
 {
     posicao -=1;
-    if (lista->aluno[posicao].nota >= 0)
+    if (posicao > lista->quantidade-1 || posicao < 0)
     {
-        lista->aluno[posicao].nome[0] = '\n';
-        lista->aluno[posicao].nota = -1;
-        for (int i = posicao; i < lista->quantidade; i++)
-        {
-            lista->aluno[posicao] = lista->aluno[posicao + 1];
-        }
-
-        lista->quantidade--;
-        system("cls");
-        printf("Removido com sucesso!\n");
-        system("pause");
+        mensagemDeErro(2);
+        return 0;
     }
     else
     {
-        mensagemDeErro(2);
+        lista->aluno[posicao].nome[0] = '\0';
+        lista->aluno[posicao].nota = -1;
+        for (int i = posicao; i < lista->quantidade; i++)
+            lista->aluno[posicao] = lista->aluno[posicao + 1]; // laço para jogar o resgistro para a ultima posição
+        lista->quantidade--;
+        return 1;
     }
 }
 
+// método para ordenar a lista em ordem alfabética
 void ordenaListaNome(Lista *lista)
 {
     Aluno aux;
-    int j, i;
-    for (i = 0; i < lista->quantidade; i++)
+    int j;
+    for (int i = 0; i < lista->quantidade; i++)
     {
         aux = lista->aluno[i];
         for (j=i; j>0 && (strcmp(aux.nome, lista->aluno[j-1].nome)<0); j--)
-            lista->aluno[j] = lista->aluno[j-1];
+            lista->aluno[j] = lista->aluno[j-1]; // laço para ordenar a lista comparando os nomes
 
         lista->aluno[j] = aux;
     }
 }
 
+// método para ordenar a lista em ordem decrescente de nota
 void ordenaListaNota(Lista *lista)
 {
     Aluno aux;
-    int j, i;
-    for (i = 0; i < lista->quantidade; i++)
+    int j;
+    for (int i = 0; i < lista->quantidade; i++)
     {
         aux = lista->aluno[i];
         for (j=i; j>0 && (aux.nota > lista->aluno[j-1].nota); j--)
-            lista->aluno[j] = lista->aluno[j-1];
+            lista->aluno[j] = lista->aluno[j-1]; // laço para ordenar a lista comparando as notas
 
         lista->aluno[j] = aux;
     }
 }
 
+// método para capturar possiveis erros durante a execução do programa
 void mensagemDeErro(int n)
 {
     system("cls");
@@ -152,14 +151,20 @@ void mensagemDeErro(int n)
     case 3:
         printf("lista vazia!\n\n");
         break;
+    case 4:
+        printf("opção inválida!\n\n");
+        break;
     }
     system("pause");
 }
 
+// função para retornar o nome de um aluno
 char* getNome(Lista *lista, int i)
 {
     return lista->aluno[i].nome;
 }
+
+// função para retornar a nota de um aluno
 float getNota(Lista *lista, int i)
 {
     return lista->aluno[i].nota;
